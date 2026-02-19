@@ -1,543 +1,516 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Market Update Bot · chatgpt dark</title>
-  <!-- Font Awesome 6 (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    /* CHATGPT-INSPIRED DARK THEME — black & gray, minimal */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Market Update Bot | AI Terminal</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* DESIGN TOKENS */
+        :root {
+            --bg-base: #000000;
+            --bg-surface: #0d0d0d;
+            --bg-panel: #171717;
+            --border-primary: #2d2d2d;
+            --text-main: #ececec;
+            --text-dim: #888888;
+            --accent-green: #10a37f;
+            --accent-red: #d94e4e;
+            --accent-amber: #d97706;
+            --shadow-premium: 0 20px 50px rgba(0,0,0,0.8);
+        }
 
-    body {
-      background: #000000;  /* pure black base */
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      color: #e5e5e5;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    /* main app container – solid dark gray, flat */
-    .app {
-      max-width: 480px;
-      width: 100%;
-      margin: 0 auto;
-      background: #171717;  /* dark gray like chatGPT panels */
-      border-radius: 28px 28px 0 0;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      margin-top: 8px;
-      margin-bottom: 8px;
-      overflow: hidden;
-      border: 1px solid #2d2d2d;
-    }
+        body {
+            background: var(--bg-base);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            padding: 10px;
+        }
 
-    /* header – solid black */
-    .header {
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #0a0a0a;
-      border-bottom: 1px solid #2d2d2d;
-    }
+        /* MAIN APP SHELL */
+        .app {
+            width: 100%;
+            max-width: 500px;
+            height: 92vh;
+            background: var(--bg-surface);
+            border-radius: 32px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border-primary);
+            box-shadow: var(--shadow-premium);
+            position: relative;
+        }
 
-    .header h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-    }
+        /* HEADER */
+        .header {
+            padding: 24px 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-surface);
+            z-index: 10;
+        }
 
-    .menu-icon {
-      font-size: 1.8rem;
-      color: #a0a0a0;
-      cursor: pointer;
-      transition: 0.2s;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      background: #1e1e1e;
-      border: 1px solid #333;
-    }
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: #fff;
+        }
 
-    .menu-icon:hover { background: #2d2d2d; color: #fff; }
+        .menu-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-primary);
+            cursor: pointer;
+        }
 
-    /* banner – neutral gradient, no glass */
-    .banner {
-      margin: 16px 20px 8px 20px;
-      background: #2a2a2a;
-      border-radius: 24px;
-      height: 100px;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" width="200" height="100"><rect width="200" height="100" fill="%23333"/><text x="20" y="55" font-family="system-ui" font-weight="500" font-size="16" fill="%23ccc">glider-app.pages.dev</text></svg>');
-      background-size: cover;
-      background-position: center;
-      border: 1px solid #3d3d3d;
-      cursor: pointer;
-      transition: transform 0.15s;
-    }
-    .banner:active { transform: scale(0.98); }
+        /* SCROLLABLE CHAT CONTENT */
+        .chat-area {
+            flex: 1;
+            padding: 0 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+            padding-bottom: 20px;
+        }
 
-    /* chat area – scroll */
-    .chat-container {
-      flex: 1;
-      padding: 16px 16px 0 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      overflow-y: auto;
-      max-height: 460px;
-      scrollbar-width: thin;
-      scrollbar-color: #4a4a4a #1a1a1a;
-    }
-    .chat-container::-webkit-scrollbar { width: 4px; }
-    .chat-container::-webkit-scrollbar-track { background: #1a1a1a; }
-    .chat-container::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 8px; }
+        .chat-area::-webkit-scrollbar { width: 0; }
 
-    .message {
-      display: flex;
-      flex-direction: column;
-    }
-    .message.bot { align-items: flex-start; }
-    .message.user { align-items: flex-end; }
+        /* MESSAGE BUBBLES */
+        .message {
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.4s ease-out;
+        }
 
-    .bubble {
-      max-width: 85%;
-      padding: 14px 18px;
-      border-radius: 22px;
-      background: #2d2d2d;   /* chatGPT assistant bubble */
-      border: 1px solid #3d3d3d;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: #ececec;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    .user .bubble {
-      background: #1e1e1e;   /* user bubble – slightly darker */
-      border: 1px solid #4a4a4a;
-      color: #ffffff;
-    }
+        .message.bot { align-items: flex-start; }
+        .message.user { align-items: flex-end; }
 
-    /* analysis card */
-    .analysis-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 4px;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px dashed #3d3d3d;
-      padding-bottom: 4px;
-    }
-    .row .label { opacity: 0.7; font-weight: 400; }
-    .row .value { font-weight: 600; }
-    .signal-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-    .buy { background: #0f7b5a; color: white; }    /* muted green */
-    .sell { background: #b33e3e; color: white; }    /* muted red */
-    .hold { background: #9e7500; color: white; }    /* muted amber */
-    .risk-low { color: #10a37f; }      /* chatGPT green */
-    .risk-medium { color: #d97706; }
-    .risk-high { color: #dc2626; }
+        .bubble {
+            max-width: 90%;
+            padding: 16px 20px;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
 
-    /* examples chips – subtle outline */
-    .examples {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 8px 16px 0 16px;
-    }
-    .chip {
-      background: #1e1e1e;
-      border: 1px solid #3d3d3d;
-      color: #cccccc;
-      padding: 8px 14px;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-    .chip:hover { background: #2d2d2d; border-color: #5a5a5a; color: white; }
+        .bot .bubble {
+            background: var(--bg-panel);
+            color: var(--text-main);
+            border: 1px solid var(--border-primary);
+            border-bottom-left-radius: 4px;
+        }
 
-    /* input area – black, solid */
-    .input-area {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 16px 20px 20px 20px;
-      background: #0d0d0d;
-      border-top: 1px solid #2d2d2d;
-    }
-    .input-area input {
-      flex: 1;
-      background: #1e1e1e;
-      border: 1px solid #3d3d3d;
-      border-radius: 40px;
-      padding: 16px 20px;
-      font-size: 1rem;
-      color: #fff;
-      outline: none;
-    }
-    .input-area input::placeholder { color: #5f5f5f; }
-    .input-area button {
-      background: #2d2d2d;
-      border: 1px solid #4a4a4a;
-      width: 56px;
-      height: 56px;
-      border-radius: 56px;
-      color: #e0e0e0;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-    .input-area button:hover { background: #3d3d3d; color: white; border-color: #6a6a6a; }
+        .user .bubble {
+            background: #fff;
+            color: #000;
+            font-weight: 500;
+            border-bottom-right-radius: 4px;
+        }
 
-    /* footer – solid black */
-    .footer {
-      background: #0a0a0a;
-      border-top: 1px solid #2d2d2d;
-      padding: 14px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .footer-ad {
-      width: 100%;
-      height: 60px;
-      background: #1e1e1e;
-      border-radius: 16px;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50"><rect width="200" height="50" fill="%23222"/><text x="20" y="30" font-family="system-ui" font-size="14" fill="%23999">footer-ad.jpg  |  premium space</text></svg>');
-      background-size: cover;
-      border: 1px solid #3d3d3d;
-    }
-    .disclaimer {
-      font-size: 0.7rem;
-      color: #888;
-      text-align: center;
-    }
+        /* ANALYSIS CARDS */
+        .analysis-card {
+            width: 100%;
+            background: #0a0a0a;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--border-primary);
+            margin-top: 10px;
+        }
 
-    /* SIDEBAR – chatgpt style drawer */
-    .sidebar-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: none;
-      z-index: 999;
-      visibility: hidden;
-      opacity: 0;
-      transition: 0.2s ease;
-    }
-    .sidebar {
-      position: fixed;
-      top: 0; left: -300px;
-      width: 280px;
-      height: 100%;
-      background: #0d0d0d;
-      border-right: 1px solid #2d2d2d;
-      z-index: 1000;
-      padding: 32px 20px;
-      transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 5px 0 20px rgba(0,0,0,0.8);
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-    }
-    .sidebar.open { left: 0; }
-    .sidebar-overlay.open {
-      visibility: visible;
-      opacity: 1;
-    }
-    .sidebar .close-icon {
-      color: #aaa;
-      font-size: 1.8rem;
-      align-self: flex-end;
-      cursor: pointer;
-    }
-    .sidebar-btn {
-      background: transparent;
-      border: 1px solid #4a4a4a;
-      color: #ddd;
-      padding: 16px;
-      border-radius: 40px;
-      font-size: 1.1rem;
-      font-weight: 500;
-      width: 100%;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .sidebar-btn:hover {
-      background: #2d2d2d;
-      border-color: #6a6a6a;
-      color: white;
-    }
-    .hidden-content {
-      margin-top: 12px;
-      padding: 16px;
-      background: #1e1e1e;
-      border-radius: 20px;
-      border-left: 4px solid #10a37f;  /* chatgpt green accent */
-      color: #10a37f;
-      font-size: 1.2rem;
-      font-weight: 500;
-      display: none;
-    }
-    .hidden-content.show { display: block; }
-  </style>
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .card-row:last-child { border: 0; }
+        .label { color: var(--text-dim); font-size: 0.85rem; }
+        .value { font-weight: 600; font-size: 0.9rem; }
+
+        .signal-pill {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .buy { background: rgba(16, 163, 127, 0.15); color: var(--accent-green); }
+        .sell { background: rgba(217, 78, 78, 0.15); color: var(--accent-red); }
+        .hold { background: rgba(217, 119, 6, 0.15); color: var(--accent-amber); }
+
+        /* CHIPS */
+        .chip-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 0 20px 15px;
+        }
+
+        .chip-container::-webkit-scrollbar { display: none; }
+
+        .chip {
+            white-space: nowrap;
+            padding: 8px 16px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-primary);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        /* INPUT AREA */
+        .input-wrapper {
+            padding: 16px 20px 10px;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-primary);
+            position: relative;
+            z-index: 5;
+        }
+
+        .input-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-primary);
+            border-radius: 100px;
+            padding: 6px 6px 6px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* STOCKBOT AD FOOTER (IMAGE ONLY) */
+        .ad-footer {
+            width: 100%;
+            height: 80px; /* Specific height for the banner */
+            background-color: #111;
+            background-image: url('/asset/banner.jpg');
+            background-size: cover;
+            background-position: center;
+            border-top: 1px solid var(--border-primary);
+            position: relative;
+            cursor: pointer;
+            animation: slideUpAd 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes slideUpAd {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .close-ad {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            text-shadow: 0 0 4px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: absolute;
+            top: 0; left: -100%;
+            width: 80%;
+            height: 100%;
+            background: var(--bg-surface);
+            z-index: 100;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 40px 24px;
+            border-right: 1px solid var(--border-primary);
+        }
+
+        .sidebar.open { left: 0; }
+        .sidebar-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 90;
+            display: none;
+        }
+
+        .sidebar-item {
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border-primary);
+            color: #fff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sidebar-item:active {
+            background: var(--bg-panel);
+        }
+
+        /* Toast Message Box */
+        #toast {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: none;
+            z-index: 200;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
 <body>
+
 <div class="app">
-  <!-- header -->
-  <div class="header">
-    <h1>Market Update Bot</h1>
-    <div class="menu-icon" id="menuToggle"><i class="fas fa-bars"></i></div>
-  </div>
-
-  <!-- banner (clickable) -->
-  <div class="banner" id="bannerClick" title="Open glider-app.pages.dev"></div>
-
-  <!-- example chips -->
-  <div class="examples" id="exampleChips">
-    <span class="chip" data-symbol="TCS">TCS</span>
-    <span class="chip" data-symbol="INFY">INFY</span>
-    <span class="chip" data-symbol="RELIANCE">RELIANCE</span>
-    <span class="chip" data-symbol="HDFCBANK">HDFCBANK</span>
-  </div>
-
-  <!-- chat messages area -->
-  <div class="chat-container" id="chatContainer">
-    <div class="message bot">
-      <div class="bubble">👋 Enter an NSE stock symbol (e.g., TCS, INFY) to get live price, signal & risk.</div>
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="overlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div style="display:flex; justify-content:space-between; margin-bottom:40px;">
+            <h2 style="font-size:1.2rem;">Terminal Menu</h2>
+            <i class="fas fa-times" id="closeMenu" style="cursor:pointer; font-size:1.2rem;"></i>
+        </div>
+        <div class="sidebar-item" onclick="window.open('https://instagram.com/_fayizeeyy')">
+            <i class="fab fa-instagram"></i> Follow @_fayizeeyy
+        </div>
+        <div class="sidebar-item" id="shareBtn">
+            <i class="fas fa-user-plus"></i> Share with Friends
+        </div>
     </div>
-  </div>
 
-  <!-- input field -->
-  <div class="input-area">
-    <input type="text" id="symbolInput" placeholder="e.g. TCS" autocomplete="off" autocapitalize="characters">
-    <button id="sendBtn"><i class="fas fa-arrow-up"></i></button>
-  </div>
+    <!-- Header -->
+    <header class="header">
+        <h1>Market Bot <span style="color:var(--accent-green)">●</span></h1>
+        <div class="menu-btn" id="menuBtn">
+            <i class="fas fa-bars-staggered" style="color:#888; font-size:1rem;"></i>
+        </div>
+    </header>
 
-  <!-- footer with static banner ad -->
-  <div class="footer">
-    <div class="footer-ad"></div>
-    <div class="disclaimer">Trade at your own risk. The developer is not responsible for any financial loss.</div>
-  </div>
+    <!-- Chat Area -->
+    <div class="chat-area" id="chat">
+        <div class="message bot">
+            <div class="bubble">
+                Welcome to the AI Terminal. Submit an NSE ticker symbol (e.g., RELIANCE) for real-time signals.
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast">Message copied to clipboard!</div>
+
+    <!-- Quick Chips -->
+    <div class="chip-container">
+        <div class="chip" onclick="handleChip('RELIANCE')">RELIANCE</div>
+        <div class="chip" onclick="handleChip('TCS')">TCS</div>
+        <div class="chip" onclick="handleChip('HDFCBANK')">HDFCBANK</div>
+        <div class="chip" onclick="handleChip('ZOMATO')">ZOMATO</div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-wrapper">
+        <div class="input-box">
+            <input type="text" id="symbolInp" placeholder="Enter symbol..." autocomplete="off">
+            <button class="send-btn" id="sendBtn">
+                <i class="fas fa-arrow-up"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- StockBot Ad Footer -->
+    <div class="ad-footer" id="adFooter" onclick="window.open('https://glider-app.pages.dev', '_blank')">
+        <i class="fas fa-times close-ad" id="closeAdBtn"></i>
+    </div>
 </div>
 
-<!-- sidebar (drawer) -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="sidebar" id="sidebar">
-  <div class="close-icon" id="closeSidebar"><i class="fas fa-times"></i></div>
-  <button class="sidebar-btn" id="followDevBtn">Follow Developer <i class="fas fa-heart" style="margin-left: 8px; color: #10a37f;"></i></button>
-  <div class="hidden-content" id="hiddenInsta">Instagram @_fayizeeyy</div>
-</div>
-
-<!-- javascript (same as before, but adapted) -->
 <script>
-  (function() {
-    // DOM elements
-    const menuToggle = document.getElementById('menuToggle');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const closeSidebar = document.getElementById('closeSidebar');
-    const followBtn = document.getElementById('followDevBtn');
-    const hiddenInsta = document.getElementById('hiddenInsta');
-    const banner = document.getElementById('bannerClick');
-    const chatContainer = document.getElementById('chatContainer');
-    const symbolInput = document.getElementById('symbolInput');
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('symbolInp');
     const sendBtn = document.getElementById('sendBtn');
-    const chips = document.querySelectorAll('.chip');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const adFooter = document.getElementById('adFooter');
+    const closeAdBtn = document.getElementById('closeAdBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const toast = document.getElementById('toast');
 
-    // --- sidebar logic ---
-    function openSidebar() {
-      sidebar.classList.add('open');
-      overlay.classList.add('open');
-    }
-    function closeSidebarFunc() {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('open');
-    }
-    menuToggle.addEventListener('click', openSidebar);
-    closeSidebar.addEventListener('click', closeSidebarFunc);
-    overlay.addEventListener('click', closeSidebarFunc);
+    // UI Controls
+    document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('open'); overlay.style.display = 'block'; };
+    document.getElementById('closeMenu').onclick = () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; };
+    overlay.onclick = () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; };
 
-    // follow button reveals hidden insta
-    followBtn.addEventListener('click', function() {
-      hiddenInsta.classList.toggle('show');
-    });
+    // Share Functionality
+    shareBtn.onclick = () => {
+        const shareText = "Hey! Check out this AI Stock Market Bot for real-time NSE signals: https://f4yaaas.github.io/stockbot";
+        
+        // Clipboard fallback
+        const textArea = document.createElement("textarea");
+        textArea.value = shareText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showToast();
+        } catch (err) {
+            console.error('Copy failed', err);
+        }
+        document.body.removeChild(textArea);
+    };
 
-    // banner click open external
-    banner.addEventListener('click', function() {
-      window.open('https://glider-app.pages.dev', '_blank');
-    });
-
-    // --- helper: add message to chat ---
-    function addMessage(text, isUser = false) {
-      const msgDiv = document.createElement('div');
-      msgDiv.classList.add('message');
-      msgDiv.classList.add(isUser ? 'user' : 'bot');
-      const bubble = document.createElement('div');
-      bubble.classList.add('bubble');
-      bubble.innerHTML = text;
-      msgDiv.appendChild(bubble);
-      chatContainer.appendChild(msgDiv);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-      return msgDiv;
+    function showToast() {
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
     }
 
-    // --- show typing indicator ---
-    function showTyping() {
-      const msgDiv = document.createElement('div');
-      msgDiv.classList.add('message', 'bot');
-      msgDiv.id = 'typingIndicator';
-      const bubble = document.createElement('div');
-      bubble.classList.add('bubble');
-      bubble.innerHTML = 'Checking... <i class="fas fa-spinner fa-pulse"></i>';
-      msgDiv.appendChild(bubble);
-      chatContainer.appendChild(msgDiv);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-      return msgDiv;
+    // Ad Close
+    closeAdBtn.onclick = (e) => {
+        e.stopPropagation();
+        adFooter.style.display = 'none';
+    };
+
+    function handleChip(sym) {
+        input.value = sym;
+        processRequest();
     }
 
-    // --- remove typing indicator ---
-    function removeTyping() {
-      const typing = document.getElementById('typingIndicator');
-      if (typing) typing.remove();
+    sendBtn.onclick = processRequest;
+    input.onkeypress = (e) => { if(e.key === 'Enter') processRequest(); };
+
+    function addMessage(html, type) {
+        const div = document.createElement('div');
+        div.className = `message ${type}`;
+        div.innerHTML = `<div class="bubble">${html}</div>`;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
     }
 
-    // --- compute signal & risk based on spec ---
-    function getSignal(price, open, changePercent) {
-      if (price > open && changePercent > 1.0) return 'BUY';
-      else if (price < open && changePercent < -1.0) return 'SELL';
-      else return 'HOLD';
+    async function processRequest() {
+        let sym = input.value.trim().toUpperCase();
+        if(!sym) return;
+
+        sym = sym.replace('.NS', '');
+
+        addMessage(sym, 'user');
+        input.value = '';
+
+        const loader = document.createElement('div');
+        loader.className = 'message bot';
+        loader.innerHTML = `<div class="bubble"><i class="fas fa-spinner fa-spin"></i> Syncing with Yahoo Finance...</div>`;
+        chat.appendChild(loader);
+        chat.scrollTop = chat.scrollHeight;
+
+        try {
+            const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${sym}.NS`;
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}&cache=${Date.now()}`;
+            
+            const res = await fetch(proxyUrl);
+            if (!res.ok) throw new Error("Connection lost");
+            
+            const data = await res.json();
+            if (!data.contents) throw new Error("Empty response");
+
+            const result = JSON.parse(data.contents);
+            const quote = result.quoteResponse?.result?.[0];
+            
+            loader.remove();
+
+            if(!quote) {
+                addMessage(`Ticker <b>${sym}</b> not found. Ensure it is a valid NSE symbol.`, 'bot');
+                return;
+            }
+
+            const price = quote.regularMarketPrice;
+            const open = quote.regularMarketOpen || price;
+            const change = quote.regularMarketChangePercent;
+            
+            let signal = "HOLD", cls = "hold";
+            if(price > open && change > 1) { signal = "BUY"; cls = "buy"; }
+            else if(price < open && change < -1) { signal = "SELL"; cls = "sell"; }
+
+            let risk = "LOW", rCls = "var(--accent-green)";
+            const absChange = Math.abs(change);
+            if(absChange > 4) { risk = "HIGH"; rCls = "var(--accent-red)"; }
+            else if(absChange > 2) { risk = "MED"; rCls = "var(--accent-amber)"; }
+
+            const card = `
+                <div style="font-weight:700; margin-bottom:12px; font-size:1.1rem">${quote.longName || quote.shortName}</div>
+                <div class="analysis-card">
+                    <div class="card-row"><span class="label">Price</span><span class="value">₹${price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
+                    <div class="card-row"><span class="label">Day Change</span><span class="value" style="color:${change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${change.toFixed(2)}%</span></div>
+                    <div class="card-row"><span class="label">Status</span><span class="value" style="text-transform:capitalize;">${quote.marketState.toLowerCase()}</span></div>
+                    <div class="card-row" style="margin-top:10px; border:0;">
+                        <span class="signal-pill ${cls}">${signal}</span>
+                        <span style="font-size:0.75rem; color:var(--text-dim); font-weight:700;">RISK: <span style="color:${rCls}">${risk}</span></span>
+                    </div>
+                </div>
+            `;
+            addMessage(card, 'bot');
+
+        } catch (e) {
+            loader.remove();
+            console.error("Fetch Error:", e);
+            addMessage("Uplink to Yahoo Finance failed. Symbol may be invalid or the service is temporarily throttled.", "bot");
+        }
     }
-    function getRisk(changePercent) {
-      const absChange = Math.abs(changePercent);
-      if (absChange <= 2.0) return { level: 'LOW', class: 'risk-low' };
-      else if (absChange > 2.0 && absChange <= 4.0) return { level: 'MEDIUM', class: 'risk-medium' };
-      else return { level: 'HIGH', class: 'risk-high' };
-    }
-
-    // --- format market state ---
-    function formatMarketState(state) {
-      if (!state) return 'N/A';
-      if (state === 'REGULAR') return '🟢 Open (Regular)';
-      if (state === 'PRE') return '🟡 Pre-market';
-      if (state === 'POST') return '🟡 After-hours';
-      return '🔴 Closed';
-    }
-
-    // --- fetch stock data from Yahoo via allorigins proxy ---
-    async function fetchStockData(symbolRaw) {
-      const symbol = symbolRaw.trim().toUpperCase();
-      if (!symbol) return;
-
-      // user message
-      addMessage(symbol, true);
-
-      // show typing
-      showTyping();
-
-      try {
-        const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}.NS`;
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
-
-        const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error('Network issue');
-
-        const textData = await response.text(); 
-        const json = JSON.parse(textData);
-
-        const quote = json.quoteResponse?.result?.[0];
-        if (!quote) throw new Error('Symbol not found on NSE');
-
-        // extract needed fields
-        const company = quote.longName || quote.shortName || symbol;
-        const price = quote.regularMarketPrice;
-        const change = quote.regularMarketChangePercent;
-        const open = quote.regularMarketOpen || price; 
-        const dayHigh = quote.regularMarketDayHigh;
-        const dayLow = quote.regularMarketDayLow;
-        const marketState = quote.marketState || 'CLOSED';
-
-        // signal & risk
-        const signal = getSignal(price, open, change);
-        const riskObj = getRisk(change);
-        const riskText = riskObj.level;
-
-        // remove typing and show analysis
-        removeTyping();
-
-        const analysisHTML = `
-          <div style="font-weight:600; margin-bottom:8px;">📈 ${company}</div>
-          <div class="analysis-grid">
-            <div class="row"><span class="label">💰 Live price</span><span class="value">₹${price?.toFixed(2) ?? 'N/A'}</span></div>
-            <div class="row"><span class="label">📊 % change</span><span class="value" style="color:${change >= 0 ? '#10a37f' : '#ef4444'};">${change?.toFixed(2) ?? 'N/A'}%</span></div>
-            <div class="row"><span class="label">📈 Day high</span><span class="value">₹${dayHigh?.toFixed(2) ?? 'N/A'}</span></div>
-            <div class="row"><span class="label">📉 Day low</span><span class="value">₹${dayLow?.toFixed(2) ?? 'N/A'}</span></div>
-            <div class="row"><span class="label">🚦 Signal</span><span class="value"><span class="signal-badge ${signal.toLowerCase()}">${signal}</span></span></div>
-            <div class="row"><span class="label">⚠️ Risk level</span><span class="value ${riskObj.class}">${riskText}</span></div>
-            <div class="row"><span class="label">🕒 Market</span><span class="value">${formatMarketState(marketState)}</span></div>
-          </div>
-        `;
-        addMessage(analysisHTML, false);
-      } catch (err) {
-        removeTyping();
-        addMessage(`❌ Error: ${err.message}. Please check symbol or try again.`, false);
-      }
-    }
-
-    // --- send button ---
-    sendBtn.addEventListener('click', () => {
-      const sym = symbolInput.value.trim();
-      if (sym) {
-        fetchStockData(sym);
-        symbolInput.value = '';
-      }
-    });
-
-    symbolInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        sendBtn.click();
-      }
-    });
-
-    chips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        const sym = chip.getAttribute('data-symbol');
-        symbolInput.value = sym;
-        fetchStockData(sym);
-      });
-    });
-
-    // auto uppercase
-    symbolInput.addEventListener('input', function() {
-      this.value = this.value.toUpperCase().replace(/[^A-Z.]/g, '');
-    });
-  })();
 </script>
+
 </body>
 </html>
