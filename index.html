@@ -7,7 +7,6 @@
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* DESIGN TOKENS */
         :root {
             --bg-base: #000000;
             --bg-surface: #0d0d0d;
@@ -22,9 +21,7 @@
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
@@ -32,352 +29,138 @@
         body {
             background: var(--bg-base);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             color: var(--text-main);
             padding: 10px;
         }
 
-        /* MAIN APP SHELL */
         .app {
-            width: 100%;
-            max-width: 500px;
-            height: 92vh;
+            width: 100%; max-width: 500px; height: 92vh;
             background: var(--bg-surface);
             border-radius: 32px;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             overflow: hidden;
             border: 1px solid var(--border-primary);
             box-shadow: var(--shadow-premium);
             position: relative;
         }
 
-        /* HEADER */
         .header {
             padding: 24px 24px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             background: var(--bg-surface);
             z-index: 10;
         }
 
-        .header h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            color: #fff;
-        }
+        .header h1 { font-size: 1.25rem; font-weight: 700; color: #fff; }
 
         .menu-btn {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 14px;
-            background: var(--bg-panel);
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 14px; background: var(--bg-panel);
             border: 1px solid var(--border-primary);
             cursor: pointer;
         }
 
-        /* SCROLLABLE CHAT CONTENT */
         .chat-area {
-            flex: 1;
-            padding: 0 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            scroll-behavior: smooth;
+            flex: 1; padding: 0 20px;
+            overflow-y: auto; display: flex; flex-direction: column; gap: 20px;
             padding-bottom: 20px;
         }
-
         .chat-area::-webkit-scrollbar { width: 0; }
 
-        /* MESSAGE BUBBLES */
-        .message {
-            display: flex;
-            flex-direction: column;
-            animation: slideUp 0.4s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .message { display: flex; flex-direction: column; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .message.bot { align-items: flex-start; }
         .message.user { align-items: flex-end; }
 
         .bubble {
-            max-width: 90%;
-            padding: 16px 20px;
-            border-radius: 24px;
-            font-size: 0.95rem;
-            line-height: 1.6;
+            max-width: 90%; padding: 16px 20px;
+            border-radius: 24px; font-size: 0.95rem; line-height: 1.6;
         }
 
-        .bot .bubble {
-            background: var(--bg-panel);
-            color: var(--text-main);
-            border: 1px solid var(--border-primary);
-            border-bottom-left-radius: 4px;
-        }
+        .bot .bubble { background: var(--bg-panel); color: var(--text-main); border: 1px solid var(--border-primary); border-bottom-left-radius: 4px; }
+        .user .bubble { background: #fff; color: #000; font-weight: 500; border-bottom-right-radius: 4px; }
 
-        .user .bubble {
-            background: #fff;
-            color: #000;
-            font-weight: 500;
-            border-bottom-right-radius: 4px;
-        }
-
-        /* ANALYSIS CARDS */
-        .analysis-card {
-            width: 100%;
-            background: #0a0a0a;
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid var(--border-primary);
-            margin-top: 10px;
-        }
-
-        .card-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #1a1a1a;
-        }
-
+        .analysis-card { width: 100%; background: #0a0a0a; border-radius: 20px; padding: 20px; border: 1px solid var(--border-primary); margin-top: 10px; }
+        .card-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a1a1a; }
         .card-row:last-child { border: 0; }
         .label { color: var(--text-dim); font-size: 0.85rem; }
         .value { font-weight: 600; font-size: 0.9rem; }
 
-        .signal-pill {
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
+        .signal-pill { padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
         .buy { background: rgba(16, 163, 127, 0.15); color: var(--accent-green); }
         .sell { background: rgba(217, 78, 78, 0.15); color: var(--accent-red); }
         .hold { background: rgba(217, 119, 6, 0.15); color: var(--accent-amber); }
 
-        /* CHIPS */
-        .chip-container {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 0 20px 15px;
-        }
+        .chip-container { display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 15px; }
+        .chip { white-space: nowrap; padding: 8px 16px; background: var(--bg-panel); border: 1px solid var(--border-primary); border-radius: 100px; font-size: 0.8rem; font-weight: 600; color: var(--text-dim); cursor: pointer; }
 
-        .chip-container::-webkit-scrollbar { display: none; }
+        .input-wrapper { padding: 16px 20px 10px; background: var(--bg-surface); border-top: 1px solid var(--border-primary); z-index: 5; }
+        .input-box { background: var(--bg-panel); border: 1px solid var(--border-primary); border-radius: 100px; padding: 6px 6px 6px 20px; display: flex; align-items: center; gap: 10px; }
+        .input-box input { flex: 1; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; }
+        .send-btn { width: 44px; height: 44px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
 
-        .chip {
-            white-space: nowrap;
-            padding: 8px 16px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-primary);
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-dim);
-            cursor: pointer;
-        }
-
-        /* INPUT AREA */
-        .input-wrapper {
-            padding: 16px 20px 10px;
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border-primary);
-            position: relative;
-            z-index: 5;
-        }
-
-        .input-box {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-primary);
-            border-radius: 100px;
-            padding: 6px 6px 6px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .input-box input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .send-btn {
-            width: 44px;
-            height: 44px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* STOCKBOT AD FOOTER */
         .ad-footer {
-            width: 100%;
-            height: 80px;
-            background-color: #111;
-            background-image: url('asset/banner.jpg');
-            background-size: cover;
-            background-position: center;
+            width: 100%; height: 85px;
+            background: #111;
             border-top: 1px solid var(--border-primary);
-            position: relative;
-            cursor: pointer;
-            animation: slideUpAd 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative; cursor: pointer;
+            overflow: hidden;
         }
+        .ad-footer img { width: 100%; height: 100%; object-fit: cover; }
+        .close-ad { position: absolute; top: 8px; right: 12px; color: #fff; background: rgba(0,0,0,0.5); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; z-index: 20; }
 
-        @keyframes slideUpAd {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .close-ad {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            color: #fff;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px;
-            text-shadow: 0 0 4px rgba(0,0,0,0.8);
-            z-index: 10;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            position: absolute;
-            top: 0; left: -100%;
-            width: 80%;
-            height: 100%;
-            background: var(--bg-surface);
-            z-index: 100;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 40px 24px;
-            border-right: 1px solid var(--border-primary);
-        }
-
+        /* Sidebar Styles */
+        .sidebar { position: absolute; top: 0; left: -100%; width: 80%; height: 100%; background: var(--bg-surface); z-index: 100; transition: left 0.3s ease; padding: 40px 24px; border-right: 1px solid var(--border-primary); }
         .sidebar.open { left: 0; }
-        .sidebar-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 90;
-            display: none;
-        }
-
-        .sidebar-item {
-            padding: 16px;
-            border-radius: 16px;
-            border: 1px solid var(--border-primary);
-            color: #fff;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .sidebar-item:active {
-            background: var(--bg-panel);
-        }
-
-        /* Toast Message Box */
-        #toast {
-            position: absolute;
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: none;
-            z-index: 200;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
+        .sidebar-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 90; display: none; }
     </style>
 </head>
 <body>
 
 <div class="app">
-    <!-- Sidebar -->
     <div class="sidebar-overlay" id="overlay"></div>
     <div class="sidebar" id="sidebar">
         <div style="display:flex; justify-content:space-between; margin-bottom:40px;">
-            <h2 style="font-size:1.2rem;">Terminal Menu</h2>
-            <i class="fas fa-times" id="closeMenu" style="cursor:pointer; font-size:1.2rem;"></i>
+            <h2 style="font-size:1.2rem;">Terminal</h2>
+            <i class="fas fa-times" id="closeMenu" style="cursor:pointer;"></i>
         </div>
-        <div class="sidebar-item" onclick="window.open('https://instagram.com/_fayizeeyy')">
-            <i class="fab fa-instagram"></i> Follow @_fayizeeyy
-        </div>
-        <div class="sidebar-item" id="shareBtn">
-            <i class="fas fa-user-plus"></i> Share with Friends
+        <div style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 20px;">DEVELOPER</div>
+        <div onclick="window.open('https://instagram.com/_fayizeeyy')" style="cursor:pointer; color:#fff; display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+            <i class="fab fa-instagram"></i> @_fayizeeyy
         </div>
     </div>
 
-    <!-- Header -->
     <header class="header">
         <h1>Market Bot <span style="color:var(--accent-green)">●</span></h1>
-        <div class="menu-btn" id="menuBtn">
-            <i class="fas fa-bars-staggered" style="color:#888; font-size:1rem;"></i>
-        </div>
+        <div class="menu-btn" id="menuBtn"><i class="fas fa-bars-staggered" style="color:#888;"></i></div>
     </header>
 
-    <!-- Chat Area -->
     <div class="chat-area" id="chat">
         <div class="message bot">
-            <div class="bubble">
-                Welcome to the AI Terminal. Submit an NSE ticker symbol (e.g., RELIANCE) for real-time signals.
-            </div>
+            <div class="bubble">Welcome to AI Terminal. Enter an NSE ticker (e.g., RELIANCE) for real-time analysis.</div>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast">Message copied to clipboard!</div>
-
-    <!-- Quick Chips -->
     <div class="chip-container">
         <div class="chip" onclick="handleChip('RELIANCE')">RELIANCE</div>
         <div class="chip" onclick="handleChip('TCS')">TCS</div>
-        <div class="chip" onclick="handleChip('HDFCBANK')">HDFCBANK</div>
-        <div class="chip" onclick="handleChip('ZOMATO')">ZOMATO</div>
+        <div class="chip" onclick="handleChip('INFY')">INFY</div>
     </div>
 
-    <!-- Input -->
     <div class="input-wrapper">
         <div class="input-box">
             <input type="text" id="symbolInp" placeholder="Enter symbol..." autocomplete="off">
-            <button class="send-btn" id="sendBtn">
-                <i class="fas fa-arrow-up"></i>
-            </button>
+            <button class="send-btn" id="sendBtn"><i class="fas fa-arrow-up"></i></button>
         </div>
     </div>
 
-    <!-- StockBot Ad Footer -->
     <div class="ad-footer" id="adFooter" onclick="window.open('https://glider-app.pages.dev', '_blank')">
-        <i class="fas fa-times close-ad" id="closeAdBtn"></i>
+        <div class="close-ad" id="closeAdBtn"><i class="fas fa-times"></i></div>
+        <!-- Fixed path for GitHub Assets -->
+        <img src="asset/banner.jpg" alt="Promotion" onerror="this.style.display='none'">
     </div>
 </div>
 
@@ -387,49 +170,13 @@
     const sendBtn = document.getElementById('sendBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
-    const adFooter = document.getElementById('adFooter');
-    const closeAdBtn = document.getElementById('closeAdBtn');
-    const shareBtn = document.getElementById('shareBtn');
-    const toast = document.getElementById('toast');
 
-    // UI Controls
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('open'); overlay.style.display = 'block'; };
     document.getElementById('closeMenu').onclick = () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; };
     overlay.onclick = () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; };
+    document.getElementById('closeAdBtn').onclick = (e) => { e.stopPropagation(); document.getElementById('adFooter').style.display = 'none'; };
 
-    // Share Functionality
-    shareBtn.onclick = () => {
-        const shareText = "Hey! Check out this AI Stock Market Bot for real-time NSE signals: https://f4yaaas.github.io/stockbot";
-        
-        const textArea = document.createElement("textarea");
-        textArea.value = shareText;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            showToast();
-        } catch (err) {
-            console.error('Copy failed', err);
-        }
-        document.body.removeChild(textArea);
-    };
-
-    function showToast() {
-        toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 2000);
-    }
-
-    // Ad Close
-    closeAdBtn.onclick = (e) => {
-        e.stopPropagation();
-        adFooter.style.display = 'none';
-    };
-
-    function handleChip(sym) {
-        input.value = sym;
-        processRequest();
-    }
-
+    function handleChip(sym) { input.value = sym; processRequest(); }
     sendBtn.onclick = processRequest;
     input.onkeypress = (e) => { if(e.key === 'Enter') processRequest(); };
 
@@ -441,77 +188,66 @@
         chat.scrollTop = chat.scrollHeight;
     }
 
+    async function fetchData(url) {
+        // Primary: AllOrigins
+        try {
+            const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}&cache=${Date.now()}`);
+            const data = await res.json();
+            return JSON.parse(data.contents);
+        } catch (e) {
+            // Fallback: Corsproxy.io
+            const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+            return await res.json();
+        }
+    }
+
     async function processRequest() {
         let sym = input.value.trim().toUpperCase();
         if(!sym) return;
-
-        // Ensure NSE suffix is added if missing
         let formattedSym = sym.includes('.') ? sym : `${sym}.NS`;
-
+        
         addMessage(sym, 'user');
         input.value = '';
 
         const loader = document.createElement('div');
         loader.className = 'message bot';
-        loader.innerHTML = `<div class="bubble"><i class="fas fa-spinner fa-spin"></i> Syncing with Market Data...</div>`;
+        loader.innerHTML = `<div class="bubble"><i class="fas fa-circle-notch fa-spin"></i> Analyzing ${formattedSym}...</div>`;
         chat.appendChild(loader);
-        chat.scrollTop = chat.scrollHeight;
 
         try {
-            // Updated fetch logic to handle user-requested stock market symbols
-            const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${formattedSym}`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}&cache=${Date.now()}`;
-            
-            let res = await fetch(proxyUrl);
-            if (!res.ok) throw new Error("Connection failed");
-            
-            let data = await res.json();
-            if (!data.contents) throw new Error("Empty response");
-
-            let result = JSON.parse(data.contents);
-            let quote = result.quoteResponse?.result?.[0];
+            const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${formattedSym}`;
+            const result = await fetchData(url);
+            const quote = result.quoteResponse?.result?.[0];
             
             loader.remove();
-
-            if(!quote) {
-                addMessage(`Ticker <b>${sym}</b> not found. Please verify the symbol and try again.`, 'bot');
-                return;
-            }
+            if(!quote) throw new Error("No data");
 
             const price = quote.regularMarketPrice;
-            const open = quote.regularMarketOpen || price;
             const change = quote.regularMarketChangePercent || 0;
-            
+            const status = (quote.marketState || "CLOSED").toLowerCase();
+
             let signal = "HOLD", cls = "hold";
-            if(price > open && change > 1) { signal = "BUY"; cls = "buy"; }
-            else if(price < open && change < -1) { signal = "SELL"; cls = "sell"; }
+            if(change > 1.5) { signal = "BUY"; cls = "buy"; }
+            else if(change < -1.5) { signal = "SELL"; cls = "sell"; }
 
-            let risk = "LOW", rCls = "var(--accent-green)";
-            const absChange = Math.abs(change);
-            if(absChange > 4) { risk = "HIGH"; rCls = "var(--accent-red)"; }
-            else if(absChange > 2) { risk = "MED"; rCls = "var(--accent-amber)"; }
-
-            const card = `
-                <div style="font-weight:700; margin-bottom:12px; font-size:1.1rem">${quote.longName || quote.shortName || sym}</div>
+            addMessage(`
+                <div style="font-weight:700; margin-bottom:8px;">${quote.longName || sym}</div>
                 <div class="analysis-card">
-                    <div class="card-row"><span class="label">Price</span><span class="value">₹${price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
-                    <div class="card-row"><span class="label">Day Change</span><span class="value" style="color:${change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${change.toFixed(2)}%</span></div>
-                    <div class="card-row"><span class="label">Status</span><span class="value" style="text-transform:capitalize;">${quote.marketState ? quote.marketState.toLowerCase() : 'active'}</span></div>
-                    <div class="card-row" style="margin-top:10px; border:0;">
+                    <div class="card-row"><span class="label">Price</span><span class="value">₹${price.toLocaleString()}</span></div>
+                    <div class="card-row"><span class="label">Change</span><span class="value" style="color:${change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${change.toFixed(2)}%</span></div>
+                    <div class="card-row"><span class="label">Market</span><span class="value">${status}</span></div>
+                    <div class="card-row" style="border:0; margin-top:10px;">
                         <span class="signal-pill ${cls}">${signal}</span>
-                        <span style="font-size:0.75rem; color:var(--text-dim); font-weight:700;">RISK: <span style="color:${rCls}">${risk}</span></span>
+                        <span style="font-size:0.7rem; color:var(--text-dim);">VOL: ${(quote.regularMarketVolume/1000000).toFixed(1)}M</span>
                     </div>
                 </div>
-            `;
-            addMessage(card, 'bot');
+            `, 'bot');
 
         } catch (e) {
-            if (loader) loader.remove();
-            console.error("Fetch Error:", e);
-            addMessage(`<span style="color:var(--accent-red); font-weight:600;">Connection Interrupted.</span><br><br><span style="font-size:0.85rem; color:var(--text-dim);">Yahoo Finance is currently unresponsive. This happens when the proxy service is congested. Please try refreshing or checking again in 30 seconds.</span>`, "bot");
+            loader.remove();
+            addMessage(`<span style="color:var(--accent-red)">Sync Failed.</span><br><small>Yahoo Finance is currently restricting access via proxy. Please wait 10 seconds and try again.</small>`, 'bot');
         }
     }
 </script>
-
 </body>
 </html>
