@@ -234,7 +234,6 @@
             width: 100%;
             height: 80px;
             background-color: #111;
-            /* Pointing to the specific asset folder in your repo */
             background-image: url('asset/banner.jpg');
             background-size: cover;
             background-position: center;
@@ -402,7 +401,6 @@
     shareBtn.onclick = () => {
         const shareText = "Hey! Check out this AI Stock Market Bot for real-time NSE signals: https://f4yaaas.github.io/stockbot";
         
-        // Clipboard fallback
         const textArea = document.createElement("textarea");
         textArea.value = shareText;
         document.body.appendChild(textArea);
@@ -447,40 +445,42 @@
         let sym = input.value.trim().toUpperCase();
         if(!sym) return;
 
-        sym = sym.replace('.NS', '');
+        // Ensure NSE suffix is added if missing
+        let formattedSym = sym.includes('.') ? sym : `${sym}.NS`;
 
         addMessage(sym, 'user');
         input.value = '';
 
         const loader = document.createElement('div');
         loader.className = 'message bot';
-        loader.innerHTML = `<div class="bubble"><i class="fas fa-spinner fa-spin"></i> Syncing with Yahoo Finance...</div>`;
+        loader.innerHTML = `<div class="bubble"><i class="fas fa-spinner fa-spin"></i> Syncing with Market Data...</div>`;
         chat.appendChild(loader);
         chat.scrollTop = chat.scrollHeight;
 
         try {
-            const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${sym}.NS`;
+            // Updated fetch logic to handle user-requested stock market symbols
+            const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${formattedSym}`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}&cache=${Date.now()}`;
             
-            const res = await fetch(proxyUrl);
-            if (!res.ok) throw new Error("Connection lost");
+            let res = await fetch(proxyUrl);
+            if (!res.ok) throw new Error("Connection failed");
             
-            const data = await res.json();
+            let data = await res.json();
             if (!data.contents) throw new Error("Empty response");
 
-            const result = JSON.parse(data.contents);
-            const quote = result.quoteResponse?.result?.[0];
+            let result = JSON.parse(data.contents);
+            let quote = result.quoteResponse?.result?.[0];
             
             loader.remove();
 
             if(!quote) {
-                addMessage(`Ticker <b>${sym}</b> not found. Ensure it is a valid NSE symbol (e.g. RELIANCE).`, 'bot');
+                addMessage(`Ticker <b>${sym}</b> not found. Please verify the symbol and try again.`, 'bot');
                 return;
             }
 
             const price = quote.regularMarketPrice;
             const open = quote.regularMarketOpen || price;
-            const change = quote.regularMarketChangePercent;
+            const change = quote.regularMarketChangePercent || 0;
             
             let signal = "HOLD", cls = "hold";
             if(price > open && change > 1) { signal = "BUY"; cls = "buy"; }
@@ -492,11 +492,11 @@
             else if(absChange > 2) { risk = "MED"; rCls = "var(--accent-amber)"; }
 
             const card = `
-                <div style="font-weight:700; margin-bottom:12px; font-size:1.1rem">${quote.longName || quote.shortName}</div>
+                <div style="font-weight:700; margin-bottom:12px; font-size:1.1rem">${quote.longName || quote.shortName || sym}</div>
                 <div class="analysis-card">
                     <div class="card-row"><span class="label">Price</span><span class="value">₹${price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
                     <div class="card-row"><span class="label">Day Change</span><span class="value" style="color:${change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${change.toFixed(2)}%</span></div>
-                    <div class="card-row"><span class="label">Status</span><span class="value" style="text-transform:capitalize;">${quote.marketState.toLowerCase()}</span></div>
+                    <div class="card-row"><span class="label">Status</span><span class="value" style="text-transform:capitalize;">${quote.marketState ? quote.marketState.toLowerCase() : 'active'}</span></div>
                     <div class="card-row" style="margin-top:10px; border:0;">
                         <span class="signal-pill ${cls}">${signal}</span>
                         <span style="font-size:0.75rem; color:var(--text-dim); font-weight:700;">RISK: <span style="color:${rCls}">${risk}</span></span>
@@ -508,7 +508,7 @@
         } catch (e) {
             if (loader) loader.remove();
             console.error("Fetch Error:", e);
-            addMessage(`<span style="color:var(--accent-red); font-weight:600;">Uplink to Yahoo Finance failed.</span><br><br><span style="font-size:0.85rem; color:var(--text-dim);">Symbol may be invalid, or the service is temporarily throttled. Please try again in a few moments.</span>`, "bot");
+            addMessage(`<span style="color:var(--accent-red); font-weight:600;">Connection Interrupted.</span><br><br><span style="font-size:0.85rem; color:var(--text-dim);">Yahoo Finance is currently unresponsive. This happens when the proxy service is congested. Please try refreshing or checking again in 30 seconds.</span>`, "bot");
         }
     }
 </script>
