@@ -1,382 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Market Update Bot | Premium Fintech AI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- CUSTOM CSS -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Market Update Bot · chatgpt dark</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* CHATGPT-INSPIRED DARK THEME — black & gray, minimal */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
 
-        :root {
-            --bg-deep: #0a0a0a;
-            --bg-card: #171717;
-            --bg-border: #262626;
-            --accent: #3b82f6;
-        }
+    body {
+      background: #000000;  /* pure black base */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #e5e5e5;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-deep);
-            color: #ececec;
-            overflow-x: hidden;
-        }
+    /* main app container – solid dark gray, flat */
+    .app {
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto;
+      background: #171717;  /* dark gray like chatGPT panels */
+      border-radius: 28px 28px 0 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      border: 1px solid #2d2d2d;
+    }
 
-        /* Glassmorphism Panels */
-        .glass-panel {
-            background: rgba(23, 23, 23, 0.8);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--bg-border);
-        }
+    /* header – solid black */
+    .header {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0a0a0a;
+      border-bottom: 1px solid #2d2d2d;
+    }
 
-        .sidebar-transition {
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
 
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-        }
+    .menu-icon {
+      font-size: 1.8rem;
+      color: #a0a0a0;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: #1e1e1e;
+      border: 1px solid #333;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
+    .menu-icon:hover { background: #2d2d2d; color: #fff; }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 10px;
-        }
+    /* banner – neutral gradient, no glass */
+    .banner {
+      margin: 16px 20px 8px 20px;
+      background: #2a2a2a;
+      border-radius: 24px;
+      height: 100px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" width="200" height="100"><rect width="200" height="100" fill="%23333"/><text x="20" y="55" font-family="system-ui" font-weight="500" font-size="16" fill="%23ccc">glider-app.pages.dev</text></svg>');
+      background-size: cover;
+      background-position: center;
+      border: 1px solid #3d3d3d;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .banner:active { transform: scale(0.98); }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    /* chat area – scroll */
+    .chat-container {
+      flex: 1;
+      padding: 16px 16px 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      max-height: 460px;
+      scrollbar-width: thin;
+      scrollbar-color: #4a4a4a #1a1a1a;
+    }
+    .chat-container::-webkit-scrollbar { width: 4px; }
+    .chat-container::-webkit-scrollbar-track { background: #1a1a1a; }
+    .chat-container::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 8px; }
 
-        .message-anim {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
+    .message {
+      display: flex;
+      flex-direction: column;
+    }
+    .message.bot { align-items: flex-start; }
+    .message.user { align-items: flex-end; }
 
-        .input-box-shadow {
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
-        }
+    .bubble {
+      max-width: 85%;
+      padding: 14px 18px;
+      border-radius: 22px;
+      background: #2d2d2d;   /* chatGPT assistant bubble */
+      border: 1px solid #3d3d3d;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #ececec;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
 
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
+    .user .bubble {
+      background: #1e1e1e;   /* user bubble – slightly darker */
+      border: 1px solid #4a4a4a;
+      color: #ffffff;
+    }
 
-        /* ChatGPT/Gemini style input */
-        .ai-input {
-            background-color: #212121;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .ai-input:focus {
-            border-color: #404040;
-            background-color: #262626;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-        }
+    /* analysis card */
+    .analysis-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed #3d3d3d;
+      padding-bottom: 4px;
+    }
+    .row .label { opacity: 0.7; font-weight: 400; }
+    .row .value { font-weight: 600; }
+    .signal-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .buy { background: #0f7b5a; color: white; }    /* muted green */
+    .sell { background: #b33e3e; color: white; }    /* muted red */
+    .hold { background: #9e7500; color: white; }    /* muted amber */
+    .risk-low { color: #10a37f; }      /* chatGPT green */
+    .risk-medium { color: #d97706; }
+    .risk-high { color: #dc2626; }
 
-        /* Signal Card Polish */
-        .signal-card {
-            background: linear-gradient(145deg, #171717, #111111);
-            position: relative;
-            overflow: hidden;
-        }
+    /* examples chips – subtle outline */
+    .examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 16px 0 16px;
+    }
+    .chip {
+      background: #1e1e1e;
+      border: 1px solid #3d3d3d;
+      color: #cccccc;
+      padding: 8px 14px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .chip:hover { background: #2d2d2d; border-color: #5a5a5a; color: white; }
 
-        .signal-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        }
-    </style>
+    /* input area – black, solid */
+    .input-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 20px 20px 20px;
+      background: #0d0d0d;
+      border-top: 1px solid #2d2d2d;
+    }
+    .input-area input {
+      flex: 1;
+      background: #1e1e1e;
+      border: 1px solid #3d3d3d;
+      border-radius: 40px;
+      padding: 16px 20px;
+      font-size: 1rem;
+      color: #fff;
+      outline: none;
+    }
+    .input-area input::placeholder { color: #5f5f5f; }
+    .input-area button {
+      background: #2d2d2d;
+      border: 1px solid #4a4a4a;
+      width: 56px;
+      height: 56px;
+      border-radius: 56px;
+      color: #e0e0e0;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .input-area button:hover { background: #3d3d3d; color: white; border-color: #6a6a6a; }
+
+    /* footer – solid black */
+    .footer {
+      background: #0a0a0a;
+      border-top: 1px solid #2d2d2d;
+      padding: 14px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-ad {
+      width: 100%;
+      height: 60px;
+      background: #1e1e1e;
+      border-radius: 16px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50"><rect width="200" height="50" fill="%23222"/><text x="20" y="30" font-family="system-ui" font-size="14" fill="%23999">footer-ad.jpg  |  premium space</text></svg>');
+      background-size: cover;
+      border: 1px solid #3d3d3d;
+    }
+    .disclaimer {
+      font-size: 0.7rem;
+      color: #888;
+      text-align: center;
+    }
+
+    /* SIDEBAR – chatgpt style drawer */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: none;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s ease;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0; left: -300px;
+      width: 280px;
+      height: 100%;
+      background: #0d0d0d;
+      border-right: 1px solid #2d2d2d;
+      z-index: 1000;
+      padding: 32px 20px;
+      transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 5px 0 20px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-overlay.open {
+      visibility: visible;
+      opacity: 1;
+    }
+    .sidebar .close-icon {
+      color: #aaa;
+      font-size: 1.8rem;
+      align-self: flex-end;
+      cursor: pointer;
+    }
+    .sidebar-btn {
+      background: transparent;
+      border: 1px solid #4a4a4a;
+      color: #ddd;
+      padding: 16px;
+      border-radius: 40px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      width: 100%;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .sidebar-btn:hover {
+      background: #2d2d2d;
+      border-color: #6a6a6a;
+      color: white;
+    }
+    .hidden-content {
+      margin-top: 12px;
+      padding: 16px;
+      background: #1e1e1e;
+      border-radius: 20px;
+      border-left: 4px solid #10a37f;  /* chatgpt green accent */
+      color: #10a37f;
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: none;
+    }
+    .hidden-content.show { display: block; }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col items-center">
+<body>
+<div class="app">
+  <!-- header -->
+  <div class="header">
+    <h1>Market Update Bot</h1>
+    <div class="menu-icon" id="menuToggle"><i class="fas fa-bars"></i></div>
+  </div>
 
-    <!-- Sidebar / Menu -->
-    <div id="sidebar" class="fixed top-0 left-0 h-full w-72 glass-panel z-50 transform -translate-x-full sidebar-transition">
-        <div class="p-6 flex flex-col h-full">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-sm font-bold uppercase tracking-widest text-gray-500">Navigation</h2>
-                <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white transition-colors">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <div class="space-y-4 flex-grow">
-                <div class="p-4 rounded-2xl bg-black/40 border border-neutral-800">
-                    <p class="text-xs text-neutral-500 uppercase tracking-widest mb-3">Developer</p>
-                    <div id="dev-info" class="mb-4">
-                        <p class="text-sm font-medium text-white flex items-center gap-2">
-                            <i class="fab fa-instagram text-pink-500"></i> @_fayizeeyy
-                        </p>
-                    </div>
-                    <a href="https://instagram.com/_fayizeeyy" target="_blank" class="block w-full text-center py-2.5 px-4 rounded-xl bg-white text-black text-xs font-bold hover:bg-gray-200 transition-all">
-                        Follow Developer
-                    </a>
-                </div>
-            </div>
+  <!-- banner (clickable) -->
+  <div class="banner" id="bannerClick" title="Open glider-app.pages.dev"></div>
 
-            <div class="mt-auto pt-6 border-t border-neutral-800">
-                <p class="text-[10px] text-neutral-600 text-center uppercase tracking-widest">v2.1 Build</p>
-            </div>
-        </div>
+  <!-- example chips -->
+  <div class="examples" id="exampleChips">
+    <span class="chip" data-symbol="TCS">TCS</span>
+    <span class="chip" data-symbol="INFY">INFY</span>
+    <span class="chip" data-symbol="RELIANCE">RELIANCE</span>
+    <span class="chip" data-symbol="HDFCBANK">HDFCBANK</span>
+  </div>
+
+  <!-- chat messages area -->
+  <div class="chat-container" id="chatContainer">
+    <div class="message bot">
+      <div class="bubble">👋 Enter an NSE stock symbol (e.g., TCS, INFY) to get live price, signal & risk.</div>
     </div>
+  </div>
 
-    <!-- Header -->
-    <header class="w-full max-w-3xl px-6 py-4 flex justify-between items-center sticky top-0 z-40 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-neutral-900">
-        <div class="flex items-center gap-4">
-            <button onclick="toggleSidebar()" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-neutral-800 transition-colors">
-                <i class="fas fa-bars-staggered text-gray-400"></i>
-            </button>
-            <h1 class="text-sm font-bold tracking-tight text-white uppercase">Market Update <span class="text-blue-500">AI</span></h1>
-        </div>
-        <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800">
-            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-            <span class="text-[10px] uppercase font-bold text-gray-500">Gemini Engine</span>
-        </div>
-    </header>
+  <!-- input field -->
+  <div class="input-area">
+    <input type="text" id="symbolInput" placeholder="e.g. TCS" autocomplete="off" autocapitalize="characters">
+    <button id="sendBtn"><i class="fas fa-arrow-up"></i></button>
+  </div>
 
-    <!-- Main Container -->
-    <main class="w-full max-w-3xl flex-grow flex flex-col p-4 md:p-6 gap-6">
-        
-        <!-- Banner -->
-        <div onclick="window.open('https://glider-app.pages.dev', '_blank')" class="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group border border-neutral-800 bg-neutral-900 shadow-lg">
-            <img src="/asset/banner.jpg" alt="Banner" class="w-full h-full object-cover opacity-40 transition-opacity group-hover:opacity-60" onerror="this.src='https://images.unsplash.com/photo-1611974717482-58284395e8fd?auto=format&fit=crop&q=80&w=1000'">
-            <div class="absolute inset-0 flex items-center justify-between px-6">
-                <div>
-                    <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-1">Ecosystem</p>
-                    <h3 class="text-sm font-bold text-white">Access Glider Trading Platform</h3>
-                </div>
-                <i class="fas fa-chevron-right text-neutral-600 group-hover:text-white transition-colors"></i>
-            </div>
-        </div>
+  <!-- footer with static banner ad -->
+  <div class="footer">
+    <div class="footer-ad"></div>
+    <div class="disclaimer">Trade at your own risk. The developer is not responsible for any financial loss.</div>
+  </div>
+</div>
 
-        <!-- Chat Area -->
-        <div id="chat-container" class="flex-grow flex flex-col gap-8 overflow-y-auto custom-scrollbar min-h-[400px] pb-10">
-            <!-- Bot Welcome Message -->
-            <div class="flex gap-4 items-start max-w-full message-anim">
-                <div class="w-8 h-8 rounded-lg bg-blue-600 flex-shrink-0 flex items-center justify-center mt-1">
-                    <i class="fas fa-robot text-white text-xs"></i>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <p class="text-sm leading-relaxed text-gray-300">
-                        Hello. I am your market analysis assistant. Provide an NSE stock symbol, and I will generate real-time trading signals and risk assessments for you.
-                    </p>
-                    <div class="flex gap-2 flex-wrap mt-2">
-                        <button onclick="handleExample('TCS')" class="px-3 py-1.5 rounded-lg border border-neutral-800 text-[11px] hover:bg-neutral-800 transition-colors">TCS.NS</button>
-                        <button onclick="handleExample('RELIANCE')" class="px-3 py-1.5 rounded-lg border border-neutral-800 text-[11px] hover:bg-neutral-800 transition-colors">RELIANCE.NS</button>
-                        <button onclick="handleExample('INFY')" class="px-3 py-1.5 rounded-lg border border-neutral-800 text-[11px] hover:bg-neutral-800 transition-colors">INFY.NS</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- sidebar (drawer) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+  <div class="close-icon" id="closeSidebar"><i class="fas fa-times"></i></div>
+  <button class="sidebar-btn" id="followDevBtn">Follow Developer <i class="fas fa-heart" style="margin-left: 8px; color: #10a37f;"></i></button>
+  <div class="hidden-content" id="hiddenInsta">Instagram @_fayizeeyy</div>
+</div>
 
-        <!-- Input Area -->
-        <div class="sticky bottom-4 w-full">
-            <div class="relative max-w-2xl mx-auto input-box-shadow">
-                <input type="text" id="symbol-input" 
-                       placeholder="Message Market Update Bot..." 
-                       class="w-full ai-input rounded-2xl py-4 px-6 pr-14 focus:outline-none transition-all text-sm placeholder:text-neutral-500 text-white"
-                       onkeypress="if(event.key === 'Enter') processInput()">
-                <button onclick="processInput()" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-xl flex items-center justify-center hover:bg-gray-200 transition-colors disabled:opacity-20" id="send-btn">
-                    <i class="fas fa-arrow-up text-black text-sm"></i>
-                </button>
-            </div>
-            <p class="text-[10px] text-center text-neutral-600 mt-3 font-medium">
-                Information may be delayed. Always verify with official NSE data.
-            </p>
-        </div>
+<!-- javascript (same as before, but adapted) -->
+<script>
+  (function() {
+    // DOM elements
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const followBtn = document.getElementById('followDevBtn');
+    const hiddenInsta = document.getElementById('hiddenInsta');
+    const banner = document.getElementById('bannerClick');
+    const chatContainer = document.getElementById('chatContainer');
+    const symbolInput = document.getElementById('symbolInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chips = document.querySelectorAll('.chip');
 
-    </main>
+    // --- sidebar logic ---
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+    }
+    function closeSidebarFunc() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+    menuToggle.addEventListener('click', openSidebar);
+    closeSidebar.addEventListener('click', closeSidebarFunc);
+    overlay.addEventListener('click', closeSidebarFunc);
 
-    <!-- Footer -->
-    <footer class="w-full max-w-3xl px-6 pb-6 mt-4">
-        <div class="p-4 rounded-xl border border-neutral-900 bg-neutral-950/50 text-[9px] text-neutral-700 text-center uppercase tracking-[0.2em]">
-            Trade at your own risk. Developer not responsible for financial loss.
-        </div>
-    </footer>
+    // follow button reveals hidden insta
+    followBtn.addEventListener('click', function() {
+      hiddenInsta.classList.toggle('show');
+    });
 
-    <!-- CUSTOM JAVASCRIPT -->
-    <script>
-        const chatContainer = document.getElementById('chat-container');
-        const symbolInput = document.getElementById('symbol-input');
-        const sidebar = document.getElementById('sidebar');
+    // banner click open external
+    banner.addEventListener('click', function() {
+      window.open('https://glider-app.pages.dev', '_blank');
+    });
 
-        // Toggle Sidebar visibility
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-        }
+    // --- helper: add message to chat ---
+    function addMessage(text, isUser = false) {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message');
+      msgDiv.classList.add(isUser ? 'user' : 'bot');
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      bubble.innerHTML = text;
+      msgDiv.appendChild(bubble);
+      chatContainer.appendChild(msgDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      return msgDiv;
+    }
 
-        // Handle Chip Clicks
-        function handleExample(sym) {
-            symbolInput.value = sym;
-            processInput();
-        }
+    // --- show typing indicator ---
+    function showTyping() {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message', 'bot');
+      msgDiv.id = 'typingIndicator';
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      bubble.innerHTML = 'Checking... <i class="fas fa-spinner fa-pulse"></i>';
+      msgDiv.appendChild(bubble);
+      chatContainer.appendChild(msgDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      return msgDiv;
+    }
 
-        // DOM Message Injector
-        function addMessage(content, isUser = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex gap-4 items-start max-w-full message-anim ${isUser ? 'flex-row-reverse' : ''}`;
-            
-            const avatar = isUser 
-                ? `<div class="w-8 h-8 rounded-lg bg-neutral-800 flex-shrink-0 flex items-center justify-center mt-1 text-[10px] font-bold">YOU</div>`
-                : `<div class="w-8 h-8 rounded-lg bg-blue-600 flex-shrink-0 flex items-center justify-center mt-1"><i class="fas fa-robot text-white text-xs"></i></div>`;
+    // --- remove typing indicator ---
+    function removeTyping() {
+      const typing = document.getElementById('typingIndicator');
+      if (typing) typing.remove();
+    }
 
-            messageDiv.innerHTML = `
-                ${avatar}
-                <div class="flex flex-col gap-2 ${isUser ? 'items-end' : ''} max-w-[85%]">
-                    <div class="${isUser ? 'bg-neutral-800 px-4 py-2 rounded-2xl text-gray-200 shadow-lg' : 'text-gray-300'} text-sm leading-relaxed">
-                        ${content}
-                    </div>
-                </div>
-            `;
-            
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-        }
+    // --- compute signal & risk based on spec ---
+    function getSignal(price, open, changePercent) {
+      if (price > open && changePercent > 1.0) return 'BUY';
+      else if (price < open && changePercent < -1.0) return 'SELL';
+      else return 'HOLD';
+    }
+    function getRisk(changePercent) {
+      const absChange = Math.abs(changePercent);
+      if (absChange <= 2.0) return { level: 'LOW', class: 'risk-low' };
+      else if (absChange > 2.0 && absChange <= 4.0) return { level: 'MEDIUM', class: 'risk-medium' };
+      else return { level: 'HIGH', class: 'risk-high' };
+    }
 
-        // Loading State
-        function showTyping() {
-            const typingDiv = document.createElement('div');
-            typingDiv.id = 'typing-indicator';
-            typingDiv.className = 'flex gap-4 items-start message-anim';
-            typingDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-lg bg-blue-600 flex-shrink-0 flex items-center justify-center mt-1">
-                    <i class="fas fa-robot text-white text-xs"></i>
-                </div>
-                <div class="text-sm text-neutral-500 italic mt-2 flex items-center gap-2">
-                    <span class="animate-pulse">Analyzing market protocols...</span>
-                </div>
-            `;
-            chatContainer.appendChild(typingDiv);
-            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-        }
+    // --- format market state ---
+    function formatMarketState(state) {
+      if (!state) return 'N/A';
+      if (state === 'REGULAR') return '🟢 Open (Regular)';
+      if (state === 'PRE') return '🟡 Pre-market';
+      if (state === 'POST') return '🟡 After-hours';
+      return '🔴 Closed';
+    }
 
-        function removeTyping() {
-            const el = document.getElementById('typing-indicator');
-            if (el) el.remove();
-        }
+    // --- fetch stock data from Yahoo via allorigins proxy ---
+    async function fetchStockData(symbolRaw) {
+      const symbol = symbolRaw.trim().toUpperCase();
+      if (!symbol) return;
 
-        // Data Retrieval using CORS Proxy
-        async function fetchMarketData(symbol) {
-            const nseSymbol = `${symbol.toUpperCase()}.NS`;
-            const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${nseSymbol}`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      // user message
+      addMessage(symbol, true);
 
-            try {
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                const json = JSON.parse(data.contents);
-                return json.quoteResponse.result[0];
-            } catch (error) {
-                console.error("Data Fetch Error:", error);
-                return null;
-            }
-        }
+      // show typing
+      showTyping();
 
-        // Trading Logic Engine
-        function generateSignal(price, open, change) {
-            let signal = { text: "HOLD", color: "text-amber-500", icon: "fa-circle-dot" };
-            
-            // Logic: Price > Open AND Change > 1%
-            if (price > open && change > 1) {
-                signal = { text: "BUY", color: "text-green-500", icon: "fa-arrow-trend-up" };
-            } 
-            // Logic: Price < Open AND Change < -1%
-            else if (price < open && change < -1) {
-                signal = { text: "SELL", color: "text-red-500", icon: "fa-arrow-trend-down" };
-            }
+      try {
+        const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}.NS`;
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
 
-            const absChange = Math.abs(change);
-            let risk = "LOW";
-            if (absChange > 4) risk = "HIGH";
-            else if (absChange > 2) risk = "MEDIUM";
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('Network issue');
 
-            return { signal, risk };
-        }
+        const textData = await response.text(); 
+        const json = JSON.parse(textData);
 
-        // Input Processor
-        async function processInput() {
-            const sym = symbolInput.value.trim().toUpperCase();
-            if (!sym) return;
+        const quote = json.quoteResponse?.result?.[0];
+        if (!quote) throw new Error('Symbol not found on NSE');
 
-            addMessage(sym, true);
-            symbolInput.value = '';
-            showTyping();
+        // extract needed fields
+        const company = quote.longName || quote.shortName || symbol;
+        const price = quote.regularMarketPrice;
+        const change = quote.regularMarketChangePercent;
+        const open = quote.regularMarketOpen || price; 
+        const dayHigh = quote.regularMarketDayHigh;
+        const dayLow = quote.regularMarketDayLow;
+        const marketState = quote.marketState || 'CLOSED';
 
-            const data = await fetchMarketData(sym);
-            removeTyping();
+        // signal & risk
+        const signal = getSignal(price, open, change);
+        const riskObj = getRisk(change);
+        const riskText = riskObj.level;
 
-            if (!data) {
-                addMessage(`I encountered an error retrieving data for **${sym}**. Please ensure it is a valid NSE-listed stock symbol.`);
-                return;
-            }
+        // remove typing and show analysis
+        removeTyping();
 
-            const { signal, risk } = generateSignal(
-                data.regularMarketPrice, 
-                data.regularMarketOpen, 
-                data.regularMarketChangePercent
-            );
-            
-            const responseHtml = `
-                <div class="signal-card p-5 rounded-2xl border border-neutral-800 w-full max-w-md shadow-2xl">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <h4 class="text-white font-bold text-base tracking-tight">${data.longName || data.shortName}</h4>
-                            <p class="text-[10px] text-neutral-500 uppercase font-black tracking-widest mt-0.5">${sym}.NS</p>
-                        </div>
-                        <span class="text-[9px] font-black px-2 py-1 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-400">
-                            ${data.marketState}
-                        </span>
-                    </div>
+        const analysisHTML = `
+          <div style="font-weight:600; margin-bottom:8px;">📈 ${company}</div>
+          <div class="analysis-grid">
+            <div class="row"><span class="label">💰 Live price</span><span class="value">₹${price?.toFixed(2) ?? 'N/A'}</span></div>
+            <div class="row"><span class="label">📊 % change</span><span class="value" style="color:${change >= 0 ? '#10a37f' : '#ef4444'};">${change?.toFixed(2) ?? 'N/A'}%</span></div>
+            <div class="row"><span class="label">📈 Day high</span><span class="value">₹${dayHigh?.toFixed(2) ?? 'N/A'}</span></div>
+            <div class="row"><span class="label">📉 Day low</span><span class="value">₹${dayLow?.toFixed(2) ?? 'N/A'}</span></div>
+            <div class="row"><span class="label">🚦 Signal</span><span class="value"><span class="signal-badge ${signal.toLowerCase()}">${signal}</span></span></div>
+            <div class="row"><span class="label">⚠️ Risk level</span><span class="value ${riskObj.class}">${riskText}</span></div>
+            <div class="row"><span class="label">🕒 Market</span><span class="value">${formatMarketState(marketState)}</span></div>
+          </div>
+        `;
+        addMessage(analysisHTML, false);
+      } catch (err) {
+        removeTyping();
+        addMessage(`❌ Error: ${err.message}. Please check symbol or try again.`, false);
+      }
+    }
 
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="p-3 bg-neutral-900/50 rounded-xl border border-neutral-800/50">
-                            <p class="text-[9px] text-neutral-500 uppercase mb-1 font-bold">Price</p>
-                            <p class="text-xl font-bold text-white tracking-tighter">₹${data.regularMarketPrice.toLocaleString('en-IN')}</p>
-                        </div>
-                        <div class="p-3 bg-neutral-900/50 rounded-xl border border-neutral-800/50">
-                            <p class="text-[9px] text-neutral-500 uppercase mb-1 font-bold">Volatility</p>
-                            <p class="text-xl font-bold tracking-tighter ${data.regularMarketChangePercent >= 0 ? 'text-green-500' : 'text-red-500'}">
-                                ${data.regularMarketChangePercent.toFixed(2)}%
-                            </p>
-                        </div>
-                    </div>
+    // --- send button ---
+    sendBtn.addEventListener('click', () => {
+      const sym = symbolInput.value.trim();
+      if (sym) {
+        fetchStockData(sym);
+        symbolInput.value = '';
+      }
+    });
 
-                    <div class="flex items-center gap-3 p-3.5 rounded-xl bg-black/40 border border-neutral-800 mb-5">
-                        <i class="fas ${signal.icon} ${signal.color} text-sm"></i>
-                        <span class="text-xs font-black ${signal.color} uppercase tracking-widest">${signal.text} SIGNAL</span>
-                        <div class="ml-auto flex flex-col items-end">
-                            <span class="text-[8px] text-neutral-600 uppercase font-bold">Risk Level</span>
-                            <span class="text-[10px] text-neutral-400 font-black">${risk}</span>
-                        </div>
-                    </div>
+    symbolInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendBtn.click();
+      }
+    });
 
-                    <div class="grid grid-cols-2 gap-4 text-[10px] text-neutral-500 font-medium">
-                        <div class="flex justify-between border-b border-neutral-800/50 pb-1">
-                            <span>HOD</span>
-                            <span class="text-neutral-300">₹${data.regularMarketDayHigh.toLocaleString('en-IN')}</span>
-                        </div>
-                        <div class="flex justify-between border-b border-neutral-800/50 pb-1">
-                            <span>LOD</span>
-                            <span class="text-neutral-300">₹${data.regularMarketDayLow.toLocaleString('en-IN')}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const sym = chip.getAttribute('data-symbol');
+        symbolInput.value = sym;
+        fetchStockData(sym);
+      });
+    });
 
-            addMessage(responseHtml);
-        }
-    </script>
+    // auto uppercase
+    symbolInput.addEventListener('input', function() {
+      this.value = this.value.toUpperCase().replace(/[^A-Z.]/g, '');
+    });
+  })();
+</script>
 </body>
 </html>
