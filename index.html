@@ -473,7 +473,7 @@
             loader.remove();
 
             if(!quote) {
-                addMessage(`Ticker <b>${sym}</b> not found. Ensure it is a valid NSE symbol.`, 'bot');
+                addMessage(`Ticker <b>${sym}</b> not found. Ensure it is a valid NSE symbol (e.g. RELIANCE).`, 'bot');
                 return;
             }
 
@@ -505,9 +505,9 @@
             addMessage(card, 'bot');
 
         } catch (e) {
-            loader.remove();
+            if (loader) loader.remove();
             console.error("Fetch Error:", e);
-            addMessage("Uplink to Yahoo Finance failed. Symbol may be invalid or the service is temporarily throttled.", "bot");
+            addMessage(`<span style="color:var(--accent-red); font-weight:600;">Uplink to Yahoo Finance failed.</span><br><br><span style="font-size:0.85rem; color:var(--text-dim);">Symbol may be invalid, or the service is temporarily throttled. Please try again in a few moments.</span>`, "bot");
         }
     }
 </script>
