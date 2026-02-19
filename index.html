@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Market Update Bot | AI Terminal</title>
+    <title> Stock Market Update Bot </title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -102,15 +102,29 @@
         .input-box input { flex: 1; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; }
         .send-btn { width: 44px; height: 44px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
 
+        /* Updated Ad Footer for Landscape Banner */
         .ad-footer {
-            width: 100%; height: 85px;
+            width: 100%; 
+            height: 110px; /* Height kootti image nallonam kaanan */
             background: #111;
             border-top: 1px solid var(--border-primary);
             position: relative; cursor: pointer;
             overflow: hidden;
         }
-        .ad-footer img { width: 100%; height: 100%; object-fit: cover; }
-        .close-ad { position: absolute; top: 8px; right: 12px; color: #fff; background: rgba(0,0,0,0.5); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; z-index: 20; }
+        .ad-footer img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* Landscape image fill aavan */
+            object-position: center;
+        }
+        .close-ad { 
+            position: absolute; top: 8px; right: 12px; 
+            color: #fff; background: rgba(0,0,0,0.6); 
+            width: 26px; height: 26px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 0.85rem; z-index: 20; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
 
         /* Sidebar Styles */
         .sidebar { position: absolute; top: 0; left: -100%; width: 80%; height: 100%; background: var(--bg-surface); z-index: 100; transition: left 0.3s ease; padding: 40px 24px; border-right: 1px solid var(--border-primary); }
@@ -140,27 +154,27 @@
 
     <div class="chat-area" id="chat">
         <div class="message bot">
-            <div class="bubble">Welcome to AI Terminal. Enter an NSE ticker (e.g., RELIANCE) for real-time analysis.</div>
+            <div class="bubble">AI Terminal-lekku swagatham. Real-time analysis-inu vendi oru NSE ticker (e.g., RELIANCE) enter cheyyuka.</div>
         </div>
     </div>
 
     <div class="chip-container">
         <div class="chip" onclick="handleChip('RELIANCE')">RELIANCE</div>
         <div class="chip" onclick="handleChip('TCS')">TCS</div>
-        <div class="chip" onclick="handleChip('INFY')">INFY</div>
+        <div class="chip" onclick="handleChip('INFY') image-kootti">INFY</div>
     </div>
 
     <div class="input-wrapper">
         <div class="input-box">
-            <input type="text" id="symbolInp" placeholder="Enter symbol..." autocomplete="off">
+            <input type="text" id="symbolInp" placeholder="Symbol enter cheyyu..." autocomplete="off">
             <button class="send-btn" id="sendBtn"><i class="fas fa-arrow-up"></i></button>
         </div>
     </div>
 
     <div class="ad-footer" id="adFooter" onclick="window.open('https://glider-app.pages.dev', '_blank')">
         <div class="close-ad" id="closeAdBtn"><i class="fas fa-times"></i></div>
-        <!-- Fixed path for GitHub Assets -->
-        <img src="asset/banner.jpg" alt="Promotion" onerror="this.style.display='none'">
+        <!-- Banner image view kooduthal nallathakkan height kootti -->
+        <img src="asset/banner.jpg" alt="[Glider Banner Landscape]" onerror="this.style.display='none'">
     </div>
 </div>
 
@@ -220,7 +234,7 @@
             const quote = result.quoteResponse?.result?.[0];
             
             loader.remove();
-            if(!quote) throw new Error("No data");
+            if(!quote) throw new Error("Data kitiyilla");
 
             const price = quote.regularMarketPrice;
             const change = quote.regularMarketChangePercent || 0;
@@ -245,7 +259,7 @@
 
         } catch (e) {
             loader.remove();
-            addMessage(`<span style="color:var(--accent-red)">Sync Failed.</span><br><small>Yahoo Finance is currently restricting access via proxy. Please wait 10 seconds and try again.</small>`, 'bot');
+            addMessage(`<span style="color:var(--accent-red)">Sync Failed aayi.</span><br><small>Yahoo Finance proxy vazhi restrict cheyyunnundu. 10 second kazhinju onnude try cheyyu.</small>`, 'bot');
         }
     }
 </script>
