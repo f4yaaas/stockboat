@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stock Market Update Bot </title>
+    <title>Stock Market Update Bot</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- TradingView Lightweight Charts -->
@@ -91,7 +90,6 @@
         .label { color: var(--text-dim); font-size: 0.8rem; }
         .value { font-weight: 600; font-size: 0.85rem; }
 
-        /* TradingView Chart Container */
         .chart-container {
             width: 100%;
             height: 200px;
@@ -128,20 +126,48 @@
         .sidebar { position: absolute; top: 0; left: -100%; width: 80%; height: 100%; background: var(--bg-surface); z-index: 100; transition: left 0.3s ease; padding: 40px 24px; border-right: 1px solid var(--border-primary); }
         .sidebar.open { left: 0; }
         .sidebar-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 90; display: none; }
+
+        .sidebar-item {
+            padding: 16px;
+            border-radius: 16px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-primary);
+            color: #fff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .sidebar-item:active { transform: scale(0.98); }
+        .sidebar-item i { width: 20px; text-align: center; color: var(--accent-green); }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #ffffff; color: #000; padding: 14px 28px; border-radius: 100px;
+            font-weight: 700; font-size: 0.9rem; z-index: 1000; display: none;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popUp { from { transform: translateX(-50%) translateY(20px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
+
+<div id="toast">Details Copied Successfully!</div>
 
 <div class="app">
     <div class="sidebar-overlay" id="overlay"></div>
     <div class="sidebar" id="sidebar">
         <div style="display:flex; justify-content:space-between; margin-bottom:40px;">
-            <h2 style="font-size:1.2rem;">Terminal</h2>
+            <h2 style="font-size:1.2rem;">Terminal Options</h2>
             <i class="fas fa-times" id="closeMenu" style="cursor:pointer;"></i>
         </div>
-        <div style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 20px;">DEVELOPER</div>
-        <div onclick="window.open('https://instagram.com/_fayizeeyy')" style="cursor:pointer; color:#fff; display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <i class="fab fa-instagram"></i> @_fayizeeyy
+        
+        <div class="sidebar-item" id="shareBtn">
+            <i class="fas fa-share-nodes"></i> Share To Friends
         </div>
     </div>
 
@@ -152,40 +178,75 @@
 
     <div class="chat-area" id="chat">
         <div class="message bot">
-            <div class="bubble">AI Terminal-lekku swagatham. Real-time analysis-inu vendi oru NSE ticker (e.g., RELIANCE) enter cheyyuka.</div>
+            <div class="bubble">Welcome to Market Terminal. Enter an NSE ticker symbol (e.g., RELIANCE) to receive real-time signals and technical charts.</div>
         </div>
     </div>
 
     <div class="chip-container">
         <div class="chip" onclick="handleChip('RELIANCE')">RELIANCE</div>
         <div class="chip" onclick="handleChip('TCS')">TCS</div>
-        <div class="chip" onclick="handleChip('INFY')">INFY</div>
+        <div class="chip" onclick="handleChip('ZOMATO')">ZOMATO</div>
     </div>
 
     <div class="input-wrapper">
         <div class="input-box">
-            <input type="text" id="symbolInp" placeholder="Symbol enter cheyyu..." autocomplete="off">
+            <input type="text" id="symbolInp" placeholder="Enter stock symbol..." autocomplete="off">
             <button class="send-btn" id="sendBtn"><i class="fas fa-arrow-up"></i></button>
         </div>
     </div>
 
     <div class="ad-footer" id="adFooter" onclick="window.open('https://glider-app.pages.dev', '_blank')">
         <div class="close-ad" id="closeAdBtn"><i class="fas fa-times"></i></div>
-        <img src="asset/banner.jpg" alt="[Glider Banner]" onerror="this.style.display='none'">
+        <img src="asset/banner.jpg" alt="Promotion" onerror="this.style.display='none'">
     </div>
 </div>
 
 <script>
+    const WORKER_URL = "https://stockbot.fayascreator.workers.dev";
+    
     const chat = document.getElementById('chat');
     const input = document.getElementById('symbolInp');
     const sendBtn = document.getElementById('sendBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    const shareBtn = document.getElementById('shareBtn');
+    const toast = document.getElementById('toast');
 
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('open'); overlay.style.display = 'block'; };
     document.getElementById('closeMenu').onclick = () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; };
     overlay.onclick = () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; };
     document.getElementById('closeAdBtn').onclick = (e) => { e.stopPropagation(); document.getElementById('adFooter').style.display = 'none'; };
+
+    shareBtn.onclick = async () => {
+        const shareUrl = "https://f4yaaas.github.io/stockbot";
+        const shareText = "📈 Check out this Market Terminal Bot! It gives real-time NSE stock signals and TradingView charts instantly.";
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Market Terminal Bot',
+                    text: shareText,
+                    url: shareUrl,
+                });
+            } catch (err) {
+                console.log("Sharing cancelled or failed");
+            }
+        } else {
+            const fullMessage = `${shareText}\n\nLink: ${shareUrl}`;
+            const el = document.createElement('textarea');
+            el.value = fullMessage;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast();
+        }
+    };
+
+    function showToast() {
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 3000);
+    }
 
     function handleChip(sym) { input.value = sym; processRequest(); }
     sendBtn.onclick = processRequest;
@@ -200,14 +261,20 @@
         return div;
     }
 
-    async function fetchData(url) {
+    async function apiRequest(path) {
+        // Updated architecture: Browser -> Your Specific Worker URL -> Yahoo
+        const fullUrl = `${WORKER_URL}${path}`;
+        
         try {
-            const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}&cache=${Date.now()}`);
-            const data = await res.json();
-            return JSON.parse(data.contents);
-        } catch (e) {
-            const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+            const res = await fetch(fullUrl);
+            if (!res.ok) throw new Error("API Limit");
             return await res.json();
+        } catch (e) {
+            // Fallback proxy only if worker fails
+            const target = `https://query1.finance.yahoo.com${path}`;
+            const backupRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(target)}&cache=${Date.now()}`);
+            const data = await backupRes.json();
+            return JSON.parse(data.contents);
         }
     }
 
@@ -229,7 +296,6 @@
             priceFormat: { type: 'price', precision: 2, minMove: 0.05 }
         });
         
-        // Mapping Yahoo historical data to TradingView format
         const chartData = data.timestamp.map((t, i) => ({
             time: t,
             value: data.indicators.quote[0].close[i]
@@ -247,14 +313,17 @@
         addMessage(sym, 'user');
         input.value = '';
 
-        const loader = addMessage(`<i class="fas fa-circle-notch fa-spin"></i> Analyzing ${formattedSym}...`, 'bot');
+        const loader = addMessage(`<i class="fas fa-circle-notch fa-spin"></i> Fetching Live Data...`, 'bot');
 
         try {
-            // Fetching Quote and 1-day historical data (5m interval) for the chart
-            const quoteUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${formattedSym}`;
-            const chartUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${formattedSym}?range=1d&interval=5m`;
+            const quotePath = `/v7/finance/quote?symbols=${formattedSym}`;
+            const chartPath = `/v8/finance/chart/${formattedSym}?range=1d&interval=5m`;
             
-            const [quoteRes, chartRes] = await Promise.all([fetchData(quoteUrl), fetchData(chartUrl)]);
+            const [quoteRes, chartRes] = await Promise.all([
+                apiRequest(quotePath), 
+                apiRequest(chartPath)
+            ]);
+
             const quote = quoteRes.quoteResponse?.result?.[0];
             const history = chartRes.chart?.result?.[0];
 
@@ -265,20 +334,19 @@
             const change = quote.regularMarketChangePercent || 0;
             const chartId = 'chart_' + Date.now();
 
-            let signal = "HOLD", cls = "hold";
-            if(change > 1.2) { signal = "BUY"; cls = "buy"; }
-            else if(change < -1.2) { signal = "SELL"; cls = "sell"; }
+            let signal = "NEUTRAL", cls = "hold";
+            if(change > 1.2) { signal = "BUY SIGNAL"; cls = "buy"; }
+            else if(change < -1.2) { signal = "SELL SIGNAL"; cls = "sell"; }
 
             addMessage(`
                 <div style="font-weight:700; margin-bottom:8px;">${quote.longName || sym}</div>
                 <div class="analysis-card">
-                    <div class="card-row"><span class="label">Price</span><span class="value">₹${price.toLocaleString()}</span></div>
-                    <div class="card-row"><span class="label">Change</span><span class="value" style="color:${change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${change.toFixed(2)}%</span></div>
+                    <div class="card-row"><span class="label">Last Price</span><span class="value">₹${price.toLocaleString()}</span></div>
+                    <div class="card-row"><span class="label">Day Change</span><span class="value" style="color:${change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${change.toFixed(2)}%</span></div>
                     <div class="card-row" style="border:0; margin-top:10px;">
                         <span class="signal-pill ${cls}">${signal}</span>
                         <span style="font-size:0.7rem; color:var(--text-dim); margin-left:10px;">VOL: ${(quote.regularMarketVolume/1000000).toFixed(1)}M</span>
                     </div>
-                    <!-- TradingView Light Implementation -->
                     <div id="${chartId}" class="chart-container"></div>
                 </div>
             `, 'bot');
@@ -289,7 +357,7 @@
 
         } catch (e) {
             loader.remove();
-            addMessage(`<span style="color:var(--accent-red)">Sync Failed.</span><br><small>Connection interrupted. 10 second kazhinju onnude try cheyyu.</small>`, 'bot');
+            addMessage(`<span style="color:var(--accent-red)">Connection Error.</span><br><small>Failed to reach the Market API. Check your internet or try again.</small>`, 'bot');
         }
     }
 </script>
